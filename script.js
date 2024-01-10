@@ -140,58 +140,132 @@
 // }
 
 
-function greet(name) {
-    console.log('Hello -', name)
-}
-
-greet('Madiyar');
-
-console.log(new Date());
-
-let mode = 'full';
-let output = document.querySelector('.now-time');
-let fullBtn = document.querySelector('.full')
-let dateBtn = document.querySelector('.date')
-let timeBtn = document.querySelector('.time')
-
-update();
-
-function update() {
-    output.textContent = format(mode);
-}
-
-setInterval(() => {
-    update();
-}, 1000)
 
 
-fullBtn.onclick = function() {
-    mode = 'full'
-    update();
-}
 
-dateBtn.onclick = function() {
-    mode = 'date'
-    update();
-}
+// function greet(name) {
+//     console.log('Hello -', name)
+// }
 
-timeBtn.onclick = function() {
-    mode = 'time'
-    update();
-}
+// greet('Madiyar');
 
-function format(formatMode) {
-    const now = new Date();
+// console.log(new Date());
 
-    switch(formatMode) {
-        case 'time':
-            return now.toLocaleTimeString()
-        case 'date': 
-            return now.toLocaleDateString()
-        case 'full':
-            return now.toLocaleDateString() + ' ' + ' ' + now.toLocaleTimeString();
+// let mode = 'full';
+// let output = document.querySelector('.now-time');
+// let fullBtn = document.querySelector('.full')
+// let dateBtn = document.querySelector('.date')
+// let timeBtn = document.querySelector('.time')
 
-        default:
-            return now.toLocaleTimeString()
+// update();
+
+// function update() {
+//     output.textContent = format(mode);
+// }
+
+// setInterval(() => {
+//     update();
+// }, 1000)
+
+
+// fullBtn.onclick = function() {
+//     mode = 'full'
+//     update();
+// }
+
+// dateBtn.onclick = function() {
+//     mode = 'date'
+//     update();
+// }
+
+// timeBtn.onclick = function() {
+//     mode = 'time'
+//     update();
+// }
+
+// function format(formatMode) {
+//     const now = new Date();
+
+//     switch(formatMode) {
+//         case 'time':
+//             return now.toLocaleTimeString()
+//         case 'date': 
+//             return now.toLocaleDateString()
+//         case 'full':
+//             return now.toLocaleDateString() + ' ' + ' ' + now.toLocaleTimeString();
+
+//         default:
+//             return now.toLocaleTimeString()
+//     }
+// }
+
+// const getData = () => new Promise((resolve) => resolve([1,2,3]))
+
+// async function asyncExample(){
+//     try {
+       
+//         const data = await getData()
+//         console.log(data)
+//     } catch (err) {
+//         console.log(err)
+//     } finally {
+//         console.log('Finally')
+//     }
+// }
+
+
+// asyncExample();
+
+
+const list = document.querySelector('.list');
+const filter = document.querySelector('.filter');
+let USERS = []
+
+
+filter.addEventListener('input', (event) => {
+    const {value} = event.target;
+    const filteredUsers = USERS.filter((user) => 
+        user.name.toLowerCase().includes(value)
+    )
+    render(filteredUsers);
+})
+async function start() {
+    list.innerHTML = 'Loading...'
+    try {
+        const resp = await fetch('https://jsonplaceholder.typicode.com/users');
+        const data = await resp.json();
+        setTimeout(() => {
+            USERS = data
+            render(data)
+        }, 2000)
+        render(data);
+    } catch (err) {
+        list.style.color = 'red';
+        list.innerHTML = err.message;
     }
 }
+
+function render(users = []) {
+    const html = users.map(toHTML).join('');
+    list.innerHTML = html;
+}
+
+
+function toHTML(user) {
+    return `
+        <li class="list-group-item">${user.name}</li>
+    `
+}
+
+start();
+
+
+
+
+
+
+
+
+
+
+
